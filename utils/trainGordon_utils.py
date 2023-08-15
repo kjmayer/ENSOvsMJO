@@ -155,7 +155,7 @@ def scheduler(epoch, lr):
 
 
 # %% ---------------- Plot Accuracy & Loss during Training ----------------
-def plot_results(history, showplot=True):
+def plot_results(history, exp_info, showplot=True):
     
     n_epochs, patience = exp_info
     
