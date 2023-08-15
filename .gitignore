@@ -2,3 +2,4 @@
 data/
 explore/*.png
 saved_models/
+*/__pycache__
