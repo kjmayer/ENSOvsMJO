@@ -57,8 +57,6 @@ def subset(x, y, n_valzero, n_valone, i_valzero, i_valone):
     return x,y,i_valnew
 
 
-
-
 # functions for generating model from Gordon et al. (in prep)
 
 # ---------------- build individual model ----------------
