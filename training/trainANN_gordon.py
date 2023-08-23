@@ -118,6 +118,7 @@ if __name__ == '__main__':
     N_days_100yrs = 100*365 #days
     LEAD = params['LEAD'] #days
     N_daysbefore =params['X_ADDITIONAL_DAYS'] #days to go "back in time" for X
+    x_months = [11,12,1,2]
     
     # TRAINING (100 years)
     # predictors [time]
@@ -231,43 +232,44 @@ if __name__ == '__main__':
     Yval_norm[Yval_norm>0] = 1
     
     
-    # subset predictand (and predictors) to same number of 0s and 1s
-    # if you subtract Ytrain median from Ytrain, you will have balanced classes, by definition
-    # therefore, you only need to subset validation (& eventually testing) data to have balanced classes
-    n_valzero = np.shape(np.where(Yval_norm==0)[0])[0]
-    n_valone  = np.shape(np.where(Yval_norm==1)[0])[0]
-    i_valzero = np.where(Yval_norm==0)[0]
-    i_valone  = np.where(Yval_norm==1)[0]
-
-    # look into the "subset" function and learn how it works
-    X1val_norm, Yval_norm, i_valnew = subset(X1val_norm, Yval_norm, n_valzero, n_valone, i_valzero, i_valone)
-    X2val_norm = X2val_norm.isel(time = i_valnew,drop=True)
+    # add memory of TS:
     
-    # convert data from xarray to numpy (xarray takes ALOT longer to train with than numpy)
-    # ----- code here -----
+    # convert data from xarray to numpy
+    # save time information to reassign after memory added
+    Xtrain_time = X1train_norm.time
     X1_train = X1train_norm.T.values
     X2_train = X2train_norm.T.values
 
+    Ytrain_time = Ytrain_norm.time
     Y_train = Ytrain_norm.values
 
+    Xval_time = X1val_norm.time
     X1_val = X1val_norm.T.values
     X2_val = X2val_norm.T.values
 
+    Yval_time = Yval_norm.time
     Y_val = Yval_norm.values
     
-    ##adding memory to the loop:
     #clunky bad loop: 
     for ee,num in enumerate(reversed(range(N_daysbefore + 1))):
+        # X1_train_back_TIME = X1train_norm[num:-(ee+1)].time
         X1_train_back = X1_train[num:-(ee+1)] 
         X2_train_back = X2_train[num:-(ee+1),:]
         if ee==0:
+            # X1_train_norm_mem_TIME = X1train_norm[num:-(ee+1)].time
             X1_train_norm_mem=X1_train[num:-(ee+1)]
             X2_train_norm_mem=X2_train[num:-(ee+1),:]
-        else: 
+        else:
+            # X1_train_norm_mem_TIME = np.vstack([X1_train_back_TIME,X1_train_norm_mem_TIME])
             X1_train_norm_mem = np.vstack([X1_train_back,X1_train_norm_mem])
             X2_train_norm_mem = np.concatenate([X2_train_back,X2_train_norm_mem],axis=1)
-    Y_train_mem=Y_train[N_daysbefore:-1] #adjust Ytarget.... 
+
+    Y_train_mem=Y_train[:-(N_daysbefore+1)]#[N_daysbefore:-1] #adjust Ytarget....
+    Ytrain_time_mem = Ytrain_time[:-(N_daysbefore+1)] #[N_daysbefore:-1]
+
+    Xtrain_time_mem = Xtrain_time[:-(N_daysbefore+1)]
     X1_train_norm_mem = X1_train_norm_mem.T
+
 
     #clunky bad loop: 
     for ee,num in enumerate(reversed(range(N_daysbefore + 1))):
@@ -280,8 +282,74 @@ if __name__ == '__main__':
             X1_val_norm_mem = np.vstack([X1_val_back,X1_val_norm_mem])
             X2_val_norm_mem = np.concatenate([X2_val_back,X2_val_norm_mem],axis=1)
 
-    Y_val_mem=Y_val[N_daysbefore:-1] #adjust Ytarget.... 
+    Y_val_mem=Y_val[:-(N_daysbefore+1)]#[N_daysbefore:-1] #adjust Ytarget.... 
+    Yval_time_mem = Yval_time[:-(N_daysbefore+1)]#[N_daysbefore:-1]
+
+    Xval_time_mem = Xval_time[:-(N_daysbefore+1)]
     X1_val_norm_mem = X1_val_norm_mem.T
+    
+    # add time information back to array
+
+    X1_trainxr_mem = xr.DataArray(data=X1_train_norm_mem,
+                            dims=["time","lead"],
+                            coords={'time':Xtrain_time_mem, 'lead':np.arange(0,N_daysbefore+1)})
+
+    X2_trainxr_mem = xr.DataArray(data=X2_train_norm_mem,
+                            dims=["time","leadx2"],
+                            coords={'time':Xtrain_time_mem, 'leadx2':np.arange(0,(N_daysbefore+1)*2)})
+
+    Y_trainxr_mem = xr.DataArray(data=Y_train_mem,
+                            dims=["time"],
+                            coords={'time':Ytrain_time_mem})
+
+    X1_valxr_mem = xr.DataArray(data=X1_val_norm_mem,
+                            dims=["time","lead"],
+                            coords={'time':Xval_time_mem, 'lead':np.arange(0,N_daysbefore+1)})
+
+    X2_valxr_mem = xr.DataArray(data=X2_val_norm_mem,
+                            dims=["time","leadx2"],
+                            coords={'time':Xval_time_mem, 'leadx2':np.arange(0,(N_daysbefore+1)*2)})
+
+    Y_valxr_mem = xr.DataArray(data=Y_val_mem,
+                            dims=["time"],
+                            coords={'time':Yval_time_mem})
+    
+    # grab NDJF (X)
+    itrain_xndjf = np.where(X1_trainxr_mem.time.dt.month.isin(x_months))
+
+    X1_trainxr_mem_NDJF = X1_trainxr_mem[X1_trainxr_mem.time.dt.month.isin(x_months)]
+    X2_trainxr_mem_NDJF = X2_trainxr_mem[X2_trainxr_mem.time.dt.month.isin(x_months)]
+
+    Y_trainxr_mem_NDJFM = Y_trainxr_mem[itrain_xndjf]
+
+
+    ival_xndjf = np.where(X1_valxr_mem.time.dt.month.isin(x_months))
+
+    X1_valxr_mem_NDJF = X1_valxr_mem[X1_valxr_mem.time.dt.month.isin(x_months)]
+    X2_valxr_mem_NDJF = X2_valxr_mem[X2_valxr_mem.time.dt.month.isin(x_months)]
+
+    Y_valxr_mem_NDJFM = Y_valxr_mem[ival_xndjf]
+    
+    
+    # subset predictand (and predictors) to same number of 0s and 1s
+    n_valzero = np.shape(np.where(Y_valxr_mem_NDJFM==0)[0])[0]
+    n_valone  = np.shape(np.where(Y_valxr_mem_NDJFM==1)[0])[0]
+    i_valzero = np.where(Y_valxr_mem_NDJFM==0)[0]
+    i_valone  = np.where(Y_valxr_mem_NDJFM==1)[0]
+
+    X1_valxr_mem_NDJF, Y_valxr_mem_NDJFM, i_valnew = subset(X1_valxr_mem_NDJF, Y_valxr_mem_NDJFM, n_valzero, n_valone, i_valzero, i_valone)
+    X2_valxr_mem_NDJF = X2_valxr_mem_NDJF.isel(time = i_valnew,drop=True)
+    
+    
+    # check that validation X & Y are the same size
+    # ----- code here -----
+    print('...subset validation data should all be the same....')
+    print(X1_valxr_mem_NDJF.shape)
+    print(X2_valxr_mem_NDJF.shape)
+    print(Y_valxr_mem_NDJFM.shape)
+    print('... were they?? ....')
+    
+    
     
     print(params)
     
@@ -345,19 +413,19 @@ if __name__ == '__main__':
     LR = tf.keras.callbacks.LearningRateScheduler(scheduler,verbose=0)
 
 
-    history = model.fit({MODELNAME1:X1_train_norm_mem,
-                         MODELNAME2:X2_train_norm_mem}, 
-                        Y_train_mem, 
+    history = model.fit({MODELNAME1:X1_trainxr_mem_NDJF,
+                         MODELNAME2:X2_trainxr_mem_NDJF}, 
+                        Y_trainxr_mem_NDJFM, 
                         batch_size = BATCH_SIZE, 
                         epochs = N_EPOCHS, 
-                        validation_data = ({MODELNAME1:X1_val_norm_mem,
-                                            MODELNAME2:X2_val_norm_mem},
-                                           Y_val_mem),  
+                        validation_data = ({MODELNAME1:X1_valxr_mem_NDJF,
+                                            MODELNAME2:X1_valxr_mem_NDJF},
+                                           Y_valxr_mem_NDJFM),  
                         verbose = 1,
                         callbacks=[ES,LR],
                         )
 
-    #----- PLOT THE RESULTS -----
+    #----- CHECK THE RESULTS -----
     pred = model.predict((X1_val_norm_mem,X2_val_norm_mem))
     cat_pred = np.argmax(pred,axis=1)
     true = Y_val_mem
