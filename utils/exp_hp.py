@@ -6,7 +6,7 @@ def get_hp(experiment_name):
         'exp1': {
             'INPUT': ['TS_SST_ONI','RMM1_CESM2','RMM2_CESM2'],
             'OUTPUT': ['TS_Z500a'],
-            'LEAD': 14,
+            'LEAD': 7,
             'X_ADDITIONAL_DAYS': 15,
             'Y_RUNMEAN': 7,
             'HIDDENS1': [8], 
