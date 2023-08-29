@@ -1,0 +1,25 @@
+
+
+
+qsub -I -q casper -A P54048000 -l walltime=12:00:00 -l select=1:ncpus=32:mem=50GB
+
+module purge
+source /glade/work/wchapman/miniconda3/bin/activate
+conda activate tf2-env
+
+python trainANN_gordon.py --LEAD 7 --EXP_NAME LEAD_7_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 8 --EXP_NAME LEAD_8_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 9 --EXP_NAME LEAD_9_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 10 --EXP_NAME LEAD_10_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 11 --EXP_NAME LEAD_11_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 12 --EXP_NAME LEAD_12_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 13 --EXP_NAME LEAD_13_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 14 --EXP_NAME LEAD_14_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 15 --EXP_NAME LEAD_15_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 16 --EXP_NAME LEAD_16_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 17 --EXP_NAME LEAD_17_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 18 --EXP_NAME LEAD_18_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 19 --EXP_NAME LEAD_19_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 20 --EXP_NAME LEAD_20_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 21 --EXP_NAME LEAD_21_AVG_7_ --CUSTOM_RUN
+python trainANN_gordon.py --LEAD 22 --EXP_NAME LEAD_22_AVG_7_ --CUSTOM_RUN

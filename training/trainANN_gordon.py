@@ -11,7 +11,7 @@ import copy
 import warnings
 import numpy as np
 import sys
-sys.path.append('/glade/work/kjmayer/research/catalyst/ENSOvsMJO/utils/')
+sys.path.append('/glade/u/home/wchapman/ENSOvsMJO/utils/')
 import ast
 
 
@@ -50,24 +50,26 @@ def parse_list(string):
 if __name__ == '__main__':
     print('...starting to fly captain...')
     parser = argparse.ArgumentParser(description='MJOvENSO')
-    parser.add_argument("--GLOBAL_SEED", default=32, type=int, help='provide a seed to train with')
-    parser.add_argument("--Y_RUNMEAN", default=7, type=int, help='provide a seed to train with')
-    parser.add_argument("--X_ADDITIONAL_DAYS",default=10,type=int, help='provide a seed to train with')
-    parser.add_argument("--LEAD",default=14,type=int, help='provide a seed to train with')
-    parser.add_argument("--EXP_NAME",default='exp1',type=str, help='provide a seed to train with')
-
-    parser.add_argument("--DROPOUT_RATE",default=0,type=int, help='provide a seed to train with')
-    parser.add_argument("--RIDGE1",default=0,type=int, help='provide a seed to train with')
-    parser.add_argument("--RIDGE2",default=0,type=int, help='provide a seed to train with')
-    parser.add_argument("--HIDDENS2",default=[8],type=parse_list, help='provide a seed to train with')
-    parser.add_argument("--HIDDENS1",default=[8],type=parse_list, help='provide a seed to train with')
-    parser.add_argument("--BATCH_SIZE",default=32,type=int, help='provide a seed to train with')
-    parser.add_argument("--PATIENCE",default=20,type=int, help='provide a seed to train with')
-    parser.add_argument("--LR",default=0.001,type=int, help='provide a seed to train with')
+    parser.add_argument("--GLOBAL_SEED", type=int, help='provide a seed to train with')
+    parser.add_argument("--Y_RUNMEAN", type=int, help='provide a seed to train with')
+    parser.add_argument("--X_ADDITIONAL_DAYS",type=int, help='provide a seed to train with')
+    parser.add_argument("--LEAD",type=int, help='provide a seed to train with')
+    parser.add_argument("--EXP_NAME",type=str, help='provide a seed to train with')
+    parser.add_argument("--DROPOUT_RATE",type=int, help='provide a seed to train with')
+    parser.add_argument("--RIDGE1",type=int, help='provide a seed to train with')
+    parser.add_argument("--RIDGE2",type=int, help='provide a seed to train with')
+    parser.add_argument("--HIDDENS2",type=parse_list, help='provide a seed to train with')
+    parser.add_argument("--HIDDENS1",type=parse_list, help='provide a seed to train with')
+    parser.add_argument("--BATCH_SIZE",type=int, help='provide a seed to train with')
+    parser.add_argument("--PATIENCE",type=int, help='provide a seed to train with')
+    parser.add_argument("--LR",type=int, help='provide a seed to train with')
     parser.add_argument("--SEED",default=1,type=int, help='provide a seed to train with')
+    parser.add_argument('--CUSTOM_RUN', action='store_true', default=False, help='Provide a seed to train with')
 
     
     args = parser.parse_args()
+    
+    params = get_hp('default')
     
     params={'XVARS':['TS_SST_ONI','RMM1_CESM2','RMM2_CESM2'], 
         'YVAR':['TS_Z500a'],
@@ -85,28 +87,35 @@ if __name__ == '__main__':
         'shuffle':True,
         'epochs':28,
         'seed':40,
-        'model_dir': "/glade/work/kjmayer/research/catalyst/ENSOvsMJO/saved_models/",
+        'model_dir': "/glade/scratch/wchapman/ENSOmjo_ML_models/saved_models/",
         'model': 'ANN_MSE',
         'SEED':1,
          }
     
-    EXP_NAME = args.EXP_NAME or params['EXP_NAME']
-    hps = get_hp(EXP_NAME)
-    params['SEED'] = args.SEED or params['SEED']
-    params['DROPOUT_RATE'] = args.DROPOUT_RATE or hps['DROPOUT_RATE']
-    params['RIDGE1'] = args.RIDGE1 or hps['RIDGE1']
-    params['RIDGE2'] = args.RIDGE2 or hps['RIDGE2']
-    params['HIDDENS1'] = args.HIDDENS1 or hps['HIDDENS1']
-    params['HIDDENS2'] = args.HIDDENS2 or hps['HIDDENS2']
-    params['BATCH_SIZE'] = args.BATCH_SIZE or hps['BATCH_SIZE']
-    params['PATIENCE'] = args.PATIENCE or hps['PATIENCE']
-    params['LR'] = args.LR or hps['LR']
-    params['GLOBAL_SEED'] = args.GLOBAL_SEED or hps['GLOBAL_SEED']
-    params['Y_RUNMEAN'] = args.Y_RUNMEAN or hps['Y_RUNMEAN']
-    params['X_ADDITIONAL_DAYS'] = args.X_ADDITIONAL_DAYS or hps['X_ADDITIONAL_DAYS']
-    params['LEAD'] = args.LEAD or hps['LEAD']
+    if args.CUSTOM_RUN:
+        print('in here')
+        hps = get_hp('default')
+        EXP_NAME = args.EXP_NAME
+    else:
+        EXP_NAME = params['EXP_NAME']
+        hps = get_hp(EXP_NAME)
+
+    params['SEED'] = args.SEED if args.SEED is not None else params['SEED']
+    params['DROPOUT_RATE'] = args.DROPOUT_RATE if args.DROPOUT_RATE is not None else hps['DROPOUT_RATE']
+    params['RIDGE1'] = args.RIDGE1 if args.RIDGE1 is not None else hps['RIDGE1']
+    params['RIDGE2'] = args.RIDGE2 if args.RIDGE2 is not None else hps['RIDGE2']
+    params['HIDDENS1'] = args.HIDDENS1 if args.HIDDENS1 is not None else hps['HIDDENS1']
+    params['HIDDENS2'] = args.HIDDENS2 if args.HIDDENS2 is not None else hps['HIDDENS2']
+    params['BATCH_SIZE'] = args.BATCH_SIZE if args.BATCH_SIZE is not None else hps['BATCH_SIZE']
+    params['PATIENCE'] = args.PATIENCE if args.PATIENCE is not None else hps['PATIENCE']
+    params['LR'] = args.LR if args.LR is not None else hps['LR']
+    params['GLOBAL_SEED'] = args.GLOBAL_SEED if args.GLOBAL_SEED is not None else hps['GLOBAL_SEED']
+    params['Y_RUNMEAN'] = args.Y_RUNMEAN if args.Y_RUNMEAN is not None else hps['Y_RUNMEAN']
+    params['X_ADDITIONAL_DAYS'] = args.X_ADDITIONAL_DAYS if args.X_ADDITIONAL_DAYS is not None else hps['X_ADDITIONAL_DAYS']
+    params['LEAD'] = args.LEAD if args.LEAD is not None else hps['LEAD']
     
-    print(params)
+    
+    print('!!!!!',EXP_NAME)
     
     np.random.seed(params['GLOBAL_SEED'])
     random.seed( params['GLOBAL_SEED'])
@@ -419,7 +428,7 @@ if __name__ == '__main__':
                         batch_size = BATCH_SIZE, 
                         epochs = N_EPOCHS, 
                         validation_data = ({MODELNAME1:X1_valxr_mem_NDJF,
-                                            MODELNAME2:X1_valxr_mem_NDJF},
+                                            MODELNAME2:X2_valxr_mem_NDJF},
                                            Y_valxr_mem_NDJFM),  
                         verbose = 1,
                         callbacks=[ES,LR],
