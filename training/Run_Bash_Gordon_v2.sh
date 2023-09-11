@@ -3,7 +3,7 @@
 # Change these values as needed
 AVG_START=7
 AVG_END=31
-LEAD_START=21
+LEAD_START=26
 LEAD_END=31
 
 # Load necessary modules
