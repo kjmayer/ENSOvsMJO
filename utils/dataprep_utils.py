@@ -49,7 +49,7 @@ def days_in_year(Ytrain):
 
 def get_testing(N_z500runmean,LEAD):
     DIR = '/glade/scratch/kjmayer/DATA/CESM2-piControl/daily/'
-    X1_FINAME = 'SSTv2_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc'
+    X1_FINAME = 'SSTv3_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc'
     X2_FINAME = 'MJO_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc'
     Y_FINAME  = 'Z500v2_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc'
 

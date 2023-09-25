@@ -4,7 +4,7 @@ def get_hp(experiment_name):
         
         ## Experiment 1:
         'default': {
-            'INPUT': ['TS_SST_ONI','RMM1_CESM2','RMM2_CESM2'],
+            'INPUT': ['TS_SST_ONI_45','RMM1_CESM2','RMM2_CESM2'],
             'OUTPUT': ['TS_Z500a'],
             'LEAD': 7,
             'X_ADDITIONAL_DAYS': 15,
@@ -22,7 +22,7 @@ def get_hp(experiment_name):
         
         ## Experiment 1:
         'exp1': {
-            'INPUT': ['TS_SST_ONI','RMM1_CESM2','RMM2_CESM2'],
+            'INPUT': ['TS_SST_ONI_45','RMM1_CESM2','RMM2_CESM2'],
             'OUTPUT': ['TS_Z500a'],
             'LEAD': 7,
             'X_ADDITIONAL_DAYS': 15,
@@ -40,7 +40,7 @@ def get_hp(experiment_name):
         
         ## Experiment 1:
         'exp2': {
-            'INPUT': ['TS_SST_ONI','RMM1_CESM2','RMM2_CESM2'],
+            'INPUT': ['TS_SST_ONI_45','RMM1_CESM2','RMM2_CESM2'],
             'OUTPUT': ['TS_Z500a'],
             'LEAD': 14,
             'X_ADDITIONAL_DAYS': 15,
