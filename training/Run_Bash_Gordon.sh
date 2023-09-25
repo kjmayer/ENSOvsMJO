@@ -3,8 +3,8 @@
 # Change these values as needed
 AVG_START=7
 AVG_END=31
-LEAD_START=21
-LEAD_END=31
+LEAD_START=7
+LEAD_END=14
 
 # Load necessary modules
 module purge
@@ -18,7 +18,7 @@ for ((lead=$LEAD_START; lead<$LEAD_END; lead++)); do
         EXP_NAME="LEAD_${lead}_AVG_${avg}_"
         
         # Loop over seed values from 2 to 5
-        for seed in {2..5}; do
+        for seed in {1..5}; do
             python trainANN_gordon.py --LEAD $lead --EXP_NAME $EXP_NAME --Y_RUNMEAN $avg --SEED $seed --CUSTOM_RUN
         done
     done
