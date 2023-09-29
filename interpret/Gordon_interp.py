@@ -25,8 +25,11 @@ def confvacc(confval,predval,Ytest):
 
         # where confident prediction is correct
         i_corrconf_predval = np.where(Ytest[i_conf_predval]==conf_predval)[0]
-
-        conf_acc[per] = (len(i_corrconf_predval) / len(i_conf_predval)) * 100
+        
+        if len(i_conf_predval) > 0:
+            conf_acc[per] = (len(i_corrconf_predval) / len(i_conf_predval)) * 100
+        else:
+            conf_acc[per] = 0
 
         # other metrics:
         confusion = tf.math.confusion_matrix(Ytest[i_conf_predval],conf_predval,num_classes=2)
