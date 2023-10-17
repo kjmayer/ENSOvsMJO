@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Change these values as needed
-AVG_START=7
-AVG_END=31
-LEAD_START=20
-LEAD_END=23
+AVG_START=2
+AVG_END=6
+LEAD_START=22
+LEAD_END=31
 
 # Load necessary modules
 module purge

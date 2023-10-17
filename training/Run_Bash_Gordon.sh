@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Change these values as needed
-AVG_START=7
-AVG_END=31
-LEAD_START=13
+AVG_START=2
+AVG_END=6
+LEAD_START=14
 LEAD_END=15
 
 # Load necessary modules

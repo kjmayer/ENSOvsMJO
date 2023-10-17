@@ -73,7 +73,7 @@ if __name__ == '__main__':
     
     params={'XVARS':['TS_SST_ONI_45','RMM1_CESM2','RMM2_CESM2'], 
         'YVAR':['TS_Z500a'],
-        'DIR':'/glade/scratch/kjmayer/DATA/CESM2-piControl/daily/', 
+        'DIR':'/glade//scratch/kjmayer/DATA/CESM2-piControl/daily/', 
         'X1_FINAME':'SSTv3_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
         'X2_FINAME':'MJO_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
         'Y_FINAME':'Z500v2_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         'shuffle':True,
         'epochs':28,
         'seed':40,
-        'model_dir': "/glade/scratch/wchapman/ENSOmjo_ML_models/saved_models/",
+        'model_dir': "/glade//scratch/wchapman/ENSOmjo_ML_models/saved_models/",
         'model': 'ANN_MSE',
         'SEED':1,
          }

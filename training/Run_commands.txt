@@ -1,7 +1,7 @@
 
 
 
-qsub -I -q casper -A P54048000 -l walltime=12:00:00 -l select=1:ncpus=32:mem=200GB
+qsub -I -q main -A P54048000 -l walltime=12:00:00 -l select=1:ncpus=32:mem=200GB
 
 module purge
 source /glade/work/wchapman/miniconda3/bin/activate
