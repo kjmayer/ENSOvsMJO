@@ -73,12 +73,12 @@ if __name__ == '__main__':
     
     params={'XVARS':['TS_SST_ONI_45','RMM1_CESM2','RMM2_CESM2'], 
         'YVAR':['TS_Z500a'],
-        'DIR':'/glade//scratch/kjmayer/DATA/CESM2-piControl/daily/', 
+        'DIR':'/glade/derecho/scratch/kjmayer/DATA/ENSOvsMJO/data_for_KJM/', 
         'X1_FINAME':'SSTv3_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
         'X2_FINAME':'MJO_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
         'Y_FINAME':'Z500v2_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
         'EXP_NAME':'exp1',
-        'model_dir':'/glade/work/kjmayer/research/catalyst/ENSOvsMJO/saved_models/',
+        'model_dir':'/glade/work/kjmayer/research/catalyst/ENSOvsMJO/data/models/',
         'batchsize':64,
         'BASEDIR':'/glade/work/wchapman/DA_ML/CESML_AI/',
         'loss':'MSE',
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         'shuffle':True,
         'epochs':28,
         'seed':40,
-        'model_dir': "/glade//scratch/wchapman/ENSOmjo_ML_models/saved_models/",
+        'model_dir': "/glade/work/kjmayer/research/catalyst/ENSOvsMJO/data/models/",
         'model': 'ANN_MSE',
         'SEED':1,
          }
@@ -242,7 +242,6 @@ if __name__ == '__main__':
     
     
     # add memory of TS:
-    
     # convert data from xarray to numpy
     # save time information to reassign after memory added
     Xtrain_time = X1train_norm.time
@@ -336,6 +335,16 @@ if __name__ == '__main__':
 
     X1_valxr_mem_NDJF = X1_valxr_mem[X1_valxr_mem.time.dt.month.isin(x_months)]
     X2_valxr_mem_NDJF = X2_valxr_mem[X2_valxr_mem.time.dt.month.isin(x_months)]
+    
+    ###+++WEC
+    vals_doy_train = np.array(X2_trainxr_mem_NDJF['time.dayofyear'])
+    vals_doy_train[vals_doy_train<60]+=366
+    vals_doy_train = (vals_doy_train-np.mean(vals_doy_train))/np.std(vals_doy_train)
+
+    vals_doy_val = np.array(X2_valxr_mem_NDJF['time.dayofyear'])
+    vals_doy_val[vals_doy_val<60]+=366
+    vals_doy_val = (vals_doy_val-np.mean(vals_doy_val))/np.std(vals_doy_val)
+    ####--WEC
 
     Y_valxr_mem_NDJFM = Y_valxr_mem[ival_xndjf]
     
@@ -348,14 +357,39 @@ if __name__ == '__main__':
 
     X1_valxr_mem_NDJF, Y_valxr_mem_NDJFM, i_valnew = subset(X1_valxr_mem_NDJF, Y_valxr_mem_NDJFM, n_valzero, n_valone, i_valzero, i_valone)
     X2_valxr_mem_NDJF = X2_valxr_mem_NDJF.isel(time = i_valnew,drop=True)
+    ###+++WEC
+    vals_doy_val = vals_doy_val[i_valnew]
+    ####--WEC
+    
+    
+    
+    
+    ###+++WEC
+    X1_train_mem_NDJF = X1_trainxr_mem_NDJF.values
+    X1_train_mem_NDJF = np.concatenate([X1_train_mem_NDJF,np.expand_dims(vals_doy_train,axis=1)],axis=-1)
+    X2_train_mem_NDJF = X2_trainxr_mem_NDJF.values
+    X2_train_mem_NDJF = np.concatenate([X2_train_mem_NDJF,np.expand_dims(vals_doy_train,axis=1)],axis=-1)
+
+    Y_train_mem_NDJFM = Y_trainxr_mem_NDJFM.values
+
+    X1_val_mem_NDJF = X1_valxr_mem_NDJF.values
+    X1_val_mem_NDJF = np.concatenate([X1_val_mem_NDJF,np.expand_dims(vals_doy_val,axis=1)],axis=-1)
+    X2_val_mem_NDJF = X2_valxr_mem_NDJF.values
+    X2_val_mem_NDJF = np.concatenate([X2_val_mem_NDJF,np.expand_dims(vals_doy_val,axis=1)],axis=-1)
+
+
+    Y_val_mem_NDJFM = Y_valxr_mem_NDJFM.values
+    ####--WEC
+    
+    
     
     
     # check that validation X & Y are the same size
     # ----- code here -----
     print('...subset validation data should all be the same....')
-    print(X1_valxr_mem_NDJF.shape)
-    print(X2_valxr_mem_NDJF.shape)
-    print(Y_valxr_mem_NDJFM.shape)
+    print(X1_val_mem_NDJF.shape)
+    print(X2_val_mem_NDJF.shape)
+    print(Y_val_mem_NDJFM.shape)
     print('... were they?? ....')
     
     
@@ -369,12 +403,12 @@ if __name__ == '__main__':
     MODELNAME1 = 'ENSO'
     RIDGE1 = params['RIDGE1']
     HIDDENS1 = params['HIDDENS1']
-    INPUT_SHAPE1 = np.shape(X1_train_norm_mem)[1:][0]
+    INPUT_SHAPE1 = np.shape(X1_val_mem_NDJF)[1:][0]
 
     MODELNAME2 = 'MJO'
     RIDGE2 = params['RIDGE2']
     HIDDENS2 = params['HIDDENS2']
-    INPUT_SHAPE2 = np.shape(X2_train_norm_mem)[1:][0]
+    INPUT_SHAPE2 = np.shape(X2_val_mem_NDJF)[1:][0]
 
     BATCH_SIZE = params['BATCH_SIZE']
     N_EPOCHS = 10000
@@ -422,14 +456,14 @@ if __name__ == '__main__':
     LR = tf.keras.callbacks.LearningRateScheduler(scheduler,verbose=0)
 
 
-    history = model.fit({MODELNAME1:X1_trainxr_mem_NDJF,
-                         MODELNAME2:X2_trainxr_mem_NDJF}, 
-                        Y_trainxr_mem_NDJFM, 
+    history = model.fit({MODELNAME1:X1_train_mem_NDJF,
+                         MODELNAME2:X2_train_mem_NDJF}, 
+                        Y_train_mem_NDJFM, 
                         batch_size = BATCH_SIZE, 
                         epochs = N_EPOCHS, 
-                        validation_data = ({MODELNAME1:X1_valxr_mem_NDJF,
-                                            MODELNAME2:X2_valxr_mem_NDJF},
-                                           Y_valxr_mem_NDJFM),  
+                        validation_data = ({MODELNAME1:X1_val_mem_NDJF,
+                                            MODELNAME2:X2_val_mem_NDJF},
+                                           Y_val_mem_NDJFM),  
                         verbose = 1,
                         callbacks=[ES,LR],
                         )

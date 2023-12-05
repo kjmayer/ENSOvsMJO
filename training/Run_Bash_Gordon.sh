@@ -15,7 +15,7 @@ conda activate tf2-env
 for ((lead=$LEAD_START; lead<$LEAD_END; lead++)); do
     # Loop over AVG_X values
     for ((avg=$AVG_START; avg<=$AVG_END; avg++)); do
-        EXP_NAME="LEAD_${lead}_AVG_${avg}_"
+        EXP_NAME="DOY_LEAD_${lead}_AVG_${avg}_"
         
         # Loop over seed values from 2 to 5
         for seed in {1..5}; do
