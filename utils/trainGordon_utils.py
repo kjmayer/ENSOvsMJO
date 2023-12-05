@@ -146,7 +146,7 @@ def fullmodel(model1,model2,input1,input2,seed):
 def scheduler(epoch, lr):
     # This function keeps the initial learning rate for the first ten epochs
     # and decreases it exponentially after that.
-    if epoch < 10:
+    if epoch < 20:
         return lr
     else:
         return lr * tf.constant(.1,dtype=tf.float32)

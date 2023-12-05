@@ -78,7 +78,6 @@ if __name__ == '__main__':
         'X2_FINAME':'MJO_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
         'Y_FINAME':'Z500v2_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc',
         'EXP_NAME':'exp1',
-        'model_dir':'/glade/work/kjmayer/research/catalyst/ENSOvsMJO/data/models/',
         'batchsize':64,
         'BASEDIR':'/glade/work/wchapman/DA_ML/CESML_AI/',
         'loss':'MSE',
@@ -87,7 +86,7 @@ if __name__ == '__main__':
         'shuffle':True,
         'epochs':28,
         'seed':40,
-        'model_dir': "/glade/work/kjmayer/research/catalyst/ENSOvsMJO/data/models/",
+        'model_dir':'/glade/work/wchapman/ENSOmjoMods/',
         'model': 'ANN_MSE',
         'SEED':1,
          }
@@ -469,9 +468,9 @@ if __name__ == '__main__':
                         )
 
     #----- CHECK THE RESULTS -----
-    pred = model.predict((X1_val_norm_mem,X2_val_norm_mem))
+    pred = model.predict((X1_val_mem_NDJF,X2_val_mem_NDJF))
     cat_pred = np.argmax(pred,axis=1)
-    true = Y_val_mem
+    true = Y_val_mem_NDJFM
 
     acc = accuracy_score(true, cat_pred)
     print('accuracy of network: ', acc)
