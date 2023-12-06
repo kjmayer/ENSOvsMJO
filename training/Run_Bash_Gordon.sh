@@ -2,9 +2,9 @@
 
 # Change these values as needed
 AVG_START=2
-AVG_END=6
-LEAD_START=14
-LEAD_END=15
+AVG_END=28
+LEAD_START=5
+LEAD_END=14
 
 # Load necessary modules
 module purge
