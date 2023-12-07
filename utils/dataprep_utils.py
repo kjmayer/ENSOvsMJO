@@ -48,7 +48,7 @@ def days_in_year(Ytrain):
 
 
 def get_testing(N_z500runmean,LEAD):
-    DIR = '/glade/scratch/kjmayer/DATA/CESM2-piControl/daily/'
+    DIR = '/glade/derecho/scratch/kjmayer/DATA/CESM2-piControl/daily/'
     X1_FINAME = 'SSTv3_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc'
     X2_FINAME = 'MJO_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc'
     Y_FINAME  = 'Z500v2_CESM2_0100_0400.b.e21.B1850.f09_g17.CMIP6-esm-piControl.001.nc'
@@ -190,6 +190,12 @@ def get_testing(N_z500runmean,LEAD):
     X1_testxr_mem_NDJF = X1_testxr_mem[X1_testxr_mem.time.dt.month.isin(x_months)]
     X2_testxr_mem_NDJF = X2_testxr_mem[X2_testxr_mem.time.dt.month.isin(x_months)]
 
+    ###+++WEC
+    vals_doy_test = np.array(X2_testxr_mem_NDJF['time.dayofyear'])
+    vals_doy_test[vals_doy_test<60]+=366
+    vals_doy_test = (vals_doy_test-np.mean(vals_doy_test))/np.std(vals_doy_test)
+    ####--WEC
+    
     Y_testxr_mem_NDJFM = Y_testxr_mem[itest_xndjf]
     
 
@@ -201,9 +207,23 @@ def get_testing(N_z500runmean,LEAD):
     i_testone  = np.where(Y_testxr_mem_NDJFM==1)[0]
     X1_testxr_mem_NDJF, Y_testxr_mem_NDJFM, i_testnew = subset(X1_testxr_mem_NDJF, Y_testxr_mem_NDJFM, n_testzero, n_testone, i_testzero, i_testone)
     X2_testxr_mem_NDJF = X2_testxr_mem_NDJF.isel(time = i_testnew,drop=True)
+    
+    ###+++WEC
+    vals_doy_test = vals_doy_test[i_testnew]
+    ####--WEC
 
+    
+    ###+++WEC
+    X1_test_mem_NDJF = X1_testxr_mem_NDJF.values
+    X1_test_mem_NDJF = np.concatenate([X1_test_mem_NDJF,np.expand_dims(vals_doy_test,axis=1)],axis=-1)
+    X2_test_mem_NDJF = X2_testxr_mem_NDJF.values
+    X2_test_mem_NDJF = np.concatenate([X2_test_mem_NDJF,np.expand_dims(vals_doy_test,axis=1)],axis=-1)
 
-    return X1_testxr_mem_NDJF, X2_testxr_mem_NDJF, Y_testxr_mem_NDJFM
+    Y_test_mem_NDJFM = Y_testxr_mem_NDJFM.values
+    ####--WEC
+    
+    
+    return X1_test_mem_NDJF, X2_test_mem_NDJF, Y_test_mem_NDJFM
 
 
 # 
