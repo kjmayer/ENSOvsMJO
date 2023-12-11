@@ -372,10 +372,15 @@ def get_testing_obs(N_z500runmean,LEAD):
 
     X1_testxr_mem_NDJF = X1_testxr_mem[X1_testxr_mem.time.dt.month.isin(x_months)]
     X2_testxr_mem_NDJF = X2_testxr_mem[X2_testxr_mem.time.dt.month.isin(x_months)]
-
+    
+    ###+++WEC
+    vals_doy_test = np.array(X2_testxr_mem_NDJF['time.dayofyear'])
+    vals_doy_test[vals_doy_test<60]+=366
+    vals_doy_test = (vals_doy_test-np.mean(vals_doy_test))/np.std(vals_doy_test)
+    ####--WEC
+    
     Y_testxr_mem_NDJFM = Y_testxr_mem[itest_xndjf]
     
-
     
     # ---------- subset predictand (and predictors) to same number of 0s and 1s ----------
     n_testzero = np.shape(np.where(Y_testxr_mem_NDJFM==0)[0])[0]
@@ -384,6 +389,20 @@ def get_testing_obs(N_z500runmean,LEAD):
     i_testone  = np.where(Y_testxr_mem_NDJFM==1)[0]
     X1_testxr_mem_NDJF, Y_testxr_mem_NDJFM, i_testnew = subset(X1_testxr_mem_NDJF, Y_testxr_mem_NDJFM, n_testzero, n_testone, i_testzero, i_testone)
     X2_testxr_mem_NDJF = X2_testxr_mem_NDJF.isel(time = i_testnew,drop=True)
+    
+    
+    ###+++WEC
+    vals_doy_test = vals_doy_test[i_testnew]
+    ####--WEC
 
+    
+    ###+++WEC
+    X1_test_mem_NDJF = X1_testxr_mem_NDJF.values
+    X1_test_mem_NDJF = np.concatenate([X1_test_mem_NDJF,np.expand_dims(vals_doy_test,axis=1)],axis=-1)
+    X2_test_mem_NDJF = X2_testxr_mem_NDJF.values
+    X2_test_mem_NDJF = np.concatenate([X2_test_mem_NDJF,np.expand_dims(vals_doy_test,axis=1)],axis=-1)
 
-    return X1_testxr_mem_NDJF, X2_testxr_mem_NDJF, Y_testxr_mem_NDJFM
+    Y_test_mem_NDJFM = Y_testxr_mem_NDJFM.values
+    ####--WEC
+
+    return X1_test_mem_NDJF, X2_test_mem_NDJF, Y_test_mem_NDJFM
