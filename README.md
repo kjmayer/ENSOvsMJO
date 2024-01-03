@@ -15,12 +15,12 @@ Explore our training scripts in the `./training` directory, with the main traini
 ## File System: 
 
 ### To See our training scripts see: 
- - `./training/trainANN_gordon.py` [**main trianing script**]
+ - `./training/trainANN_gordon.py` [**main training script**]
  - `./training/Run_Bash_Gordon.sh` [**loop through training windows**]
  - `./utils` [**major functionality**]
 
 ### Data prep and preprocessing happens here: 
-#### [calcultation of modes, and indices]
+#### [calculation of modes, and indices]
  - `./preprocessing`
  - - `./preprocessing/Make_SST_Anomaly_CESM2_Vfast.ipynb` (**SST**)
  - - `./preprocessing/Make_Z500_Anomaly_CESM2_Vfast.ipynb` (**AL index**)
