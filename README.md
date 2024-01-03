@@ -29,9 +29,9 @@ Explore our training scripts in the `./training` directory, with the main traini
 
 ## Figure Creation:
 
-- **Figure 1:** `./interpret/interpret-PermutImport.ipynb` and `./interpret/interpret-data-obs.ipynb`
+- **Figure 1c,d:** `./interpret/interpret-data.ipynb`, `./interpret/interpret-data-obs.ipynb` and `./interpret/interpret-confvsacc-plot.ipynb`
 - **Figure 2:** `./interpret/interpret-doy.ipynb` and `./interpret/interpret-doy-plot.ipynb`
-- **Figure 3:** `./interpret/interpret-modelcont-plot.ipynb`
+- **Figure 3:** `./interpret/interpret-PermutImport.ipynb`, `./interpret/interpret-data.ipynb`, and `./interpret/interpret-modelcont-plot.ipynb` 
 - **Figure 4:** `./explore/interpret-data_composite_final.ipynb` (includes Silhouette Plot)
 
 For supplemental figures, check `./explore/ModelBias.ipynb`.
