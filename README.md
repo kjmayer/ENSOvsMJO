@@ -1,5 +1,15 @@
 
-# Exploring the Relative Contribution of the MJO and ENSO to Midlatitude Subseasonal Predictability with an Interpretable Neural Network
+
+# REPO FOR: Exploring the Relative Contribution of the MJO and ENSO to Midlatitude Subseasonal Predictability with an Interpretable Neural Network
+
+# Transparent Data Use and Repository Guide
+
+Welcome to the repository for exploring the relative contribution of the Madden-Julian Oscillation (MJO) and El Niño Southern Oscillation (ENSO) to midlatitude subseasonal predictability using an interpretable neural network. We prioritize transparent data use, ensuring reproducibility and clarity in our research. The data preparation and preprocessing are detailed in the `./preprocessing` directory, where various notebooks calculate modes and indices, such as SST anomalies, AL index (Z500 anomaly), ENSO index (ONI anomaly), and MJO indices.
+
+## Using This Repository:
+
+Explore our training scripts in the `./training` directory, with the main training script located at `./training/trainANN_gordon.py`. To navigate the key functionality, visit the `./utils` directory. For figures, refer to the corresponding notebooks in the `./interpret` and `./explore` directories.
+
 
 
 ## File System: 
@@ -17,16 +27,18 @@
  - -./preprocessing/Make_ONI_Anomaly_CESM2_Vfast.ipynb (**ENSO index**)
  - -./preprocessing/Make_MJO_OLR_LIN_METHOD_CESM2_KMWC.ipynb (**MJO indices**)
 
-### Figure 1
-- ./interpret/
-### Figure 2
-- ./interpret/
-### Figure 3
-- ./interpret/
-### Figure 4
-- ./explore/interpret-data_composite_final.ipynb
-### Supplemental Figures: 
-- ./explore/
+## Figure Creation:
+
+- **Figure 1:** `./interpret/interpret-PermutImport.ipynb` and `./interpret/interpret-data-obs.ipynb`
+- **Figure 2:** `./interpret/interpret-doy.ipynb` and `./interpret/interpret-doy-plot.ipynb`
+- **Figure 3:** `./interpret/interpret-modelcont-plot.ipynb`
+- **Figure 4:** `./explore/interpret-data_composite_final.ipynb` (includes Silhouette Plot)
+
+For supplemental figures, check `./explore/ModelBias.ipynb`.
+
+Feel free to explore and contribute to the research. The goal is not just to develop a forecasting system but to utilize an interpretable framework to dissect predictability sources within specific lead times and averaging windows. Initial results indicate a preference for the ENSO state in making accurate predictions at longer subseasonal lead times. Further analysis will uncover the relative contributions of MJO and ENSO to midlatitude subseasonal predictability across various forecast horizons.
+
+
 
 ### Abstract: 
 
