@@ -15,17 +15,17 @@ Explore our training scripts in the `./training` directory, with the main traini
 ## File System: 
 
 ### To See our training scripts see: 
- - ./training/trainANN_gordon.py [**main trianing script**]
- - ./training/Run_Bash_Gordon.sh [**loop through training windows**]
- - ./utils [**major functionality**]
+ - `./training/trainANN_gordon.py` [**main trianing script**]
+ - `./training/Run_Bash_Gordon.sh` [**loop through training windows**]
+ - `./utils` [**major functionality**]
 
 ### Data prep and preprocessing happens here: 
 #### [calcultation of modes, and indices]
- - ./preprocessing
- - - ./preprocessing/Make_SST_Anomaly_CESM2_Vfast.ipynb (**SST**)
- - - ./preprocessing/Make_Z500_Anomaly_CESM2_Vfast.ipynb (**AL index**)
- - -./preprocessing/Make_ONI_Anomaly_CESM2_Vfast.ipynb (**ENSO index**)
- - -./preprocessing/Make_MJO_OLR_LIN_METHOD_CESM2_KMWC.ipynb (**MJO indices**)
+ - `./preprocessing`
+ - - `./preprocessing/Make_SST_Anomaly_CESM2_Vfast.ipynb` (**SST**)
+ - - `./preprocessing/Make_Z500_Anomaly_CESM2_Vfast.ipynb` (**AL index**)
+ - - `./preprocessing/Make_ONI_Anomaly_CESM2_Vfast.ipynb` (**ENSO index**)
+ - - `./preprocessing/Make_MJO_OLR_LIN_METHOD_CESM2_KMWC.ipynb` (**MJO indices**)
 
 ## Figure Creation:
 
